@@ -15,13 +15,13 @@
                     <th id="th-id" >#</th>
                     <th id="th-title" @click="sortBy" :class="{active: isSorted}">
                         Title
-                        <IconCaretUp v-if="isSorted" :class="{'flip-vertical': isSortedFromEnd}" />
+                        <IconCaretUp v-if="isSorted" :class="{'flip-vertical': isSorted && sortState == 2}" />
                     </th>
                     <th id="th-artist">Artist</th>
                     <th id="th-album">Album</th>
                     <th id="th-duration" @click="sortByLength" :class="{active: isSortedByLength}">
                         Duration
-                        <IconCaretUp />
+                        <IconCaretUp v-if="isSortedByLength" :class="{'flip-vertical': isSortedByLength && sortStateByLength == 2}" />
                     </th>
                 </tr>
                 <!-- Loop goes on this <tr> element -->
@@ -63,8 +63,8 @@
         data() {
             let isSorted = false
             let isSortedByLength = false
-            let sortStateByLength
-            let sortState
+            let sortStateByLength = 0
+            let sortState = 0
             let isActive = JSON.parse(localStorage.getItem('isActive')) || false
             return {
                 search: '',
@@ -89,7 +89,9 @@
                 localStorage.setItem('isActive', JSON.stringify(this.isActive))
             },
 
+            //Dziesmu kārtošana, līdz gaman nav bet nu neko darīt :()
             sortBy() {
+                const originalData = songs
                 if(!this.isSorted){
                     this.isSorted = true
                     this.sortState = 1
@@ -100,11 +102,13 @@
                 }else if(this.isSorted && this.sortState == 2){
                     this.isSorted = false
                     this.sortState = 0
-                    this.songsCopy = songs
+                    this.songsCopy = originalData
                 }
             },
 
+            //Dziesmu kārtošana pēc laika
             sortByLength() {
+                const originalData = songs
                 if(!this.isSortedByLength){
                     this.isSortedByLength = true
                     this.sortStateByLength = 1
@@ -115,14 +119,11 @@
                 }else if(this.isSortedByLength && this.sortStateByLength == 2){
                     this.isSortedByLength = false
                     this.sortStateByLength = 0
-                    this.songsCopy = songs
+                    this.songsCopy = originalData
                 }
             },
 
-            isSortedFromEnd(){
-                return this.sortState == 2
-            },
-
+            //Dziesmas atskaņošana ar dubultklišķi
             selectSong(song) {
                 this.clicks++
                 if (this.clicks === 1) {
@@ -156,6 +157,7 @@
         },
 
         computed: {
+            //Dziesmu objekta apstrāde
             songsCopy() {
                 let songs_copy = this.songs
                 if(this.isActive){

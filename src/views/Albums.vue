@@ -3,8 +3,8 @@
     <div class="wrapper-header">
         <h1>ALBUMS</h1>
         <div class="settings">
-            <button id="btn-grid" @click="showGridView" :class="{active: isGridView}"><IconGrid /></button>
-            <button id="btn-list" @click="showListView" :class="{active: isListView}"><IconList /></button>
+            <button id="btn-grid" @click="switchView" :class="{active: isGridView}"><IconGrid /></button>
+            <button id="btn-list" @click="switchView" :class="{active: isListView}"><IconList /></button>
         </div>
         </div>
         <ul id="list-albums" :class="{grid: isGridView}" v-for="album in albums">
@@ -39,15 +39,9 @@
             }
         },
         methods: {
-            showGridView() {
-                
+            switchView() {
                 this.isGridView = !this.isGridView
                 this.isListView = !this.isListView
-            },
-
-            showListView() {
-                this.isListView = !this.isListView
-                this.isGridView = !this.isGridView
             }
         },
 
